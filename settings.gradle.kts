@@ -20,9 +20,11 @@ dependencyResolutionManagement {
         maven {
             url = uri("https://www.jitpack.io")
             content {
-                includeModule("com.github.matrix-org", "matrix-analytics-events")
                 includeModule("com.github.SchildiChat", "element-compound-android")
                 includeModule("com.github.beeper.matrix-messageformat-compose", "messageformat-android")
+                includeModule("com.github.matrix-org", "matrix-analytics-events")
+                // Required transitively by androidx.media3:media3-exoplayer-midi for MIDI playback.
+                includeModule("com.github.philburk", "jsyn")
             }
         }
         // SC forks of upstream Rust projects

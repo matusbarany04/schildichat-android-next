@@ -90,9 +90,9 @@ class RoomListDataSource(
 
     val loadingState = roomList.loadingState
 
-    fun launchIn(coroutineScope: CoroutineScope) {
+    fun launchIn(coroutineScope: CoroutineScope): Job {
         scInboxSettingsHandler.launchIn(coroutineScope, scInboxFilterFlow)
-        roomList
+        return roomList
             .summaries
             .onEach { roomSummaries ->
                 replaceWith(roomSummaries)
@@ -221,6 +221,7 @@ class RoomListDataSource(
     private suspend fun rebuildAllRoomSummaries() {
         lock.withLock {
             roomList.summaries.replayCache.firstOrNull()?.let { roomSummaries ->
+                diffCacheUpdater.updateWith(roomSummaries)
                 buildAndEmitAllRooms(roomSummaries, useCache = false)
             }
         }

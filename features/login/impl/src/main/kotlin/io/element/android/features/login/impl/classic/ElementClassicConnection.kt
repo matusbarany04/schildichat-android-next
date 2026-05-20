@@ -28,8 +28,6 @@ import io.element.android.libraries.androidutils.service.ServiceBinder
 import io.element.android.libraries.core.log.logger.LoggerTag
 import io.element.android.libraries.core.uri.ensureProtocol
 import io.element.android.libraries.di.annotations.AppCoroutineScope
-import io.element.android.libraries.featureflag.api.FeatureFlagService
-import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.auth.ElementClassicSession
 import io.element.android.libraries.matrix.api.auth.HomeServerLoginCompatibilityChecker
 import io.element.android.libraries.matrix.api.auth.MatrixAuthenticationService
@@ -71,7 +69,6 @@ class DefaultElementClassicConnection(
     private val coroutineScope: CoroutineScope,
     private val matrixAuthenticationService: MatrixAuthenticationService,
     private val homeServerLoginCompatibilityChecker: HomeServerLoginCompatibilityChecker,
-    private val featureFlagService: FeatureFlagService,
     private val scLegacyPackageProvider: ScLegacyPackageProvider,
 ) : ElementClassicConnection {
     // Messenger for communicating with the service.
@@ -120,10 +117,6 @@ class DefaultElementClassicConnection(
     override fun start() {
         Timber.tag(loggerTag.value).d("start()")
         coroutineScope.launch {
-            if (!featureFlagService.isFeatureEnabled(FeatureFlags.SignInWithClassic)) {
-                Timber.tag(loggerTag.value).d("Login with Element Classic is disabled, not starting connection")
-                return@launch
-            }
             // Establish a connection with the service. We use an explicit
             // class name because there is no reason to be able to let other
             // applications replace our component.
@@ -159,11 +152,6 @@ class DefaultElementClassicConnection(
     override fun requestSession() {
         Timber.tag(loggerTag.value).d("requestSession()")
         coroutineScope.launch {
-            if (!featureFlagService.isFeatureEnabled(FeatureFlags.SignInWithClassic)) {
-                Timber.tag(loggerTag.value).d("Login with Element Classic is disabled")
-                emitState(ElementClassicConnectionState.Error("The feature is disabled"))
-                return@launch
-            }
             val finalMessenger = messenger
             if (finalMessenger == null) {
                 Timber.tag(loggerTag.value).d("The messenger is null, can't request data")
