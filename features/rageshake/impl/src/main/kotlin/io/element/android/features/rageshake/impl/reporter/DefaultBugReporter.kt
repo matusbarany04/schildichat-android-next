@@ -132,6 +132,7 @@ class DefaultBugReporter(
         problemDescription: String,
         canContact: Boolean,
         sendPushRules: Boolean,
+        ghIssueNumber: Int?,
         listener: BugReporterListener,
     ) {
         val url = bugReporterUrlProvider.provide().first()
@@ -153,6 +154,9 @@ class DefaultBugReporter(
                 val crashCallStack = crashDataStore.crashInfo().first()
                 val bugDescription = buildString {
                     append(problemDescription)
+                    ghIssueNumber?.let {
+                        append("\n\nhttps://github.com/element-hq/element-x-android/issues/$it")
+                    }
                     if (crashCallStack.isNotEmpty() && withCrashLogs) {
                         append("\n\n\n\n--------------------------------- crash call stack ---------------------------------\n")
                         append(crashCallStack.take(5000))

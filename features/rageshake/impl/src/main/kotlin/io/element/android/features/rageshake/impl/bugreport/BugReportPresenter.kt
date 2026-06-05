@@ -116,6 +116,9 @@ class BugReportPresenter(
                     sendingProgress.floatValue = 0f
                     sendingAction.value = AsyncAction.Uninitialized
                 }
+                is BugReportEvents.SetGhIssueNumber -> updateFormState(formState) {
+                    copy(ghIssueNumber = event.ghIssueNumber)
+                }
             }
         }
 
@@ -145,7 +148,8 @@ class BugReportPresenter(
             problemDescription = formState.description,
             canContact = formState.canContact,
             sendPushRules = formState.sendPushRules,
-            listener = listener
+            ghIssueNumber = formState.ghIssueNumber,
+            listener = listener,
         )
     }
 

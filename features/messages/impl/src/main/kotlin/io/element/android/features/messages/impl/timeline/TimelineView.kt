@@ -224,16 +224,18 @@ fun TimelineView(
                 onFocusEventRender = ::onFocusEventRender,
             )
 
-            if (FLOATING_DATE.value() && useReverseLayout) {
-                // The SC variant - upstream added theirs later
-                FloatingDateHeader(lazyListState, state.timelineItems)
-            } else if (state.displayFloatingDateBadge && useReverseLayout) {
+            if (useReverseLayout) {
+                if (FLOATING_DATE.value()) {
+                    // The SC variant - upstream added theirs later
+                    FloatingDateHeader(lazyListState, state.timelineItems)
+                } else { // SC wrong indention start
                 FloatingDateBadgeOverlay(
                     lazyListState = lazyListState,
                     timelineItems = state.timelineItems,
                     isLive = state.isLive,
                     topOffset = floatingDateTopOffset,
                 )
+                } // SC wrong indention end
             }
         }
     }

@@ -12,6 +12,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -182,7 +183,7 @@ fun HomeTopBar(
 }
 
 @Composable
-private fun RoomListMenuItems(
+private fun RowScope.RoomListMenuItems(
     onStartChatClick: () -> Unit, // SC
     onCreateSpaceClick: (() -> Unit)?, // SC
     onToggleSearch: () -> Unit,

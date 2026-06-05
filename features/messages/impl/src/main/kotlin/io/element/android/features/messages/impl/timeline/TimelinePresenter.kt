@@ -70,6 +70,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -141,9 +142,6 @@ class TimelinePresenter(
         val messageShieldDialogData: MutableState<MessageShieldData?> = remember { mutableStateOf(null) }
 
         val resolveVerifiedUserSendFailureState = resolveVerifiedUserSendFailurePresenter.present()
-        val isSendPublicReadReceiptsEnabled by remember {
-            sessionPreferencesStore.isSendPublicReadReceiptsEnabled()
-        }.collectAsState(initial = true)
         val renderReadReceipts by remember {
             sessionPreferencesStore.isRenderReadReceiptsEnabled()
         }.collectAsState(initial = true)
@@ -158,9 +156,6 @@ class TimelinePresenter(
 
         val displayThreadSummaries by produceState(false) {
             value = featureFlagService.isFeatureEnabled(FeatureFlags.Threads)
-        }
-        val displayFloatingDateBadge by produceState(false) {
-            value = featureFlagService.isFeatureEnabled(FeatureFlags.FloatingDateBadge)
         }
 
         fun handleEvent(event: TimelineEvent) {
@@ -195,12 +190,15 @@ class TimelinePresenter(
                         }
 
                         Timber.tag(tag).d("## sendReadReceiptIfNeeded firstVisibleIndex: ${event.firstIndex}")
-                        sessionCoroutineScope.sendReadReceiptIfNeeded(
-                            firstVisibleIndex = event.firstIndex,
-                            timelineItems = timelineItems,
-                            lastReadReceiptId = lastReadReceiptId,
-                            readReceiptType = if (isSendPublicReadReceiptsEnabled) ReceiptType.READ else ReceiptType.READ_PRIVATE,
-                        )
+                        sessionCoroutineScope.launch {
+                            val sendPublicReadReceipts = sessionPreferencesStore.isSendPublicReadReceiptsEnabled().first()
+                            sendReadReceiptIfNeeded(
+                                firstVisibleIndex = event.firstIndex,
+                                timelineItems = timelineItems,
+                                lastReadReceiptId = lastReadReceiptId,
+                                readReceiptType = if (sendPublicReadReceipts) ReceiptType.READ else ReceiptType.READ_PRIVATE,
+                            )
+                        }
                     } else {
                         newEventState.value = NewEventState.None
                     }
@@ -347,7 +345,6 @@ class TimelinePresenter(
             messageShieldDialogData = messageShieldDialogData.value,
             resolveVerifiedUserSendFailureState = resolveVerifiedUserSendFailureState,
             displayThreadSummaries = displayThreadSummaries,
-            displayFloatingDateBadge = displayFloatingDateBadge,
             eventSink = ::handleEvent,
         )
     }

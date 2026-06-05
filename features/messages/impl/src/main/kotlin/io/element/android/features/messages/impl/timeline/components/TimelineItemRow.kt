@@ -79,7 +79,7 @@ internal fun TimelineItemRow(
             TimelineItemEventContentView(
                 content = event.content,
                 debugInfoProvider = event.timelineItemDebugInfoProvider, // SC
-                hideMediaContent = timelineProtectionState.hideMediaContent(event.eventId),
+                hideMediaContent = timelineProtectionState.hideMediaContent(event.eventId, event.isMine),
                 onShowContentClick = { timelineProtectionState.eventSink(TimelineProtectionEvent.ShowContent(event.eventId)) },
                 onContentClick = { onContentClick(event) },
                 onLinkClick = onLinkClick,
@@ -125,11 +125,13 @@ internal fun TimelineItemRow(
                     }
                     is TimelineItemRtcNotificationContent -> {
                         TimelineItemCallNotifyView(
-                            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
                             timelineRoomInfo = timelineRoomInfo,
                             event = timelineItem,
                             content = timelineItem.content,
+                            renderReadReceipts = renderReadReceipts,
+                            isLastOutgoingMessage = isLastOutgoingMessage,
                             onLongClick = onLongClick,
+                            onReadReceiptsClick = onReadReceiptClick,
                         )
                     }
                     else -> {

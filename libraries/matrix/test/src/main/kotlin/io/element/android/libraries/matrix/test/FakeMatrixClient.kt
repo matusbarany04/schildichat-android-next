@@ -116,6 +116,7 @@ class FakeMatrixClient(
     private val addRecentEmojiLambda: (String) -> Result<Unit> = { Result.success(Unit) },
     private val markRoomAsFullyReadResult: (RoomId, EventId) -> Result<Unit> = { _, _ -> lambdaError() },
     private val performDatabaseVacuumLambda: () -> Result<Unit> = { lambdaError() },
+    private val getMapStyleUrlResult: () -> Result<String?> = { lambdaError() },
     private val getDatabaseSizesLambda: () -> Result<SdkStoreSizes> = { lambdaError() },
     private val resetWellKnownConfigLambda: () -> Result<Unit> = { lambdaError() },
 ) : MatrixClient {
@@ -379,6 +380,10 @@ class FakeMatrixClient(
 
     override suspend fun performDatabaseVacuum(): Result<Unit> {
         return performDatabaseVacuumLambda()
+    }
+
+    override suspend fun getMapStyleUrl(): Result<String?> = simulateLongTask {
+        getMapStyleUrlResult()
     }
 
     override suspend fun canLinkNewDevice(): Result<Boolean> = simulateLongTask {

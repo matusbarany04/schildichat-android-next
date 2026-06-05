@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -421,7 +422,7 @@ fun TextComposer(
 
     // Re-focus the text input when voice recording ends so the user can continue typing
     var previousVoiceMessageState by remember { mutableStateOf(voiceMessageState) }
-    LaunchedEffect(voiceMessageState) {
+    LaunchedEffect(voiceMessageState, onRequestFocus) {
         if (voiceMessageState is VoiceMessageState.Idle && previousVoiceMessageState !is VoiceMessageState.Idle) {
             onRequestFocus()
         }
@@ -524,6 +525,7 @@ private fun StandardLayout(
                     .padding(bottom = 8.dp, top = 8.dp)
                     .weight(1f)
             ) {
+                val movableVoiceRecording = remember { movableContentOf { voiceRecording() } }
                 if (voiceMessageState is VoiceMessageState.Idle) {
                     textInput()
                 } else if (composerMode is MessageComposerMode.Special) {
@@ -532,10 +534,10 @@ private fun StandardLayout(
                         onResetComposerMode = onResetComposerMode,
                         isTextEmpty = true,
                     ) {
-                        voiceRecording()
+                        movableVoiceRecording()
                     }
                 } else {
-                    voiceRecording()
+                    movableVoiceRecording()
                 }
             }
             // To avoid loosing keyboard focus, the IconButton has to be defined here and has to be always enabled.

@@ -20,6 +20,7 @@ find "$mydir" -not -path "./schildi/**" \
             s|\(name="screen_onboarding_welcome_title".*\)SchildiChat|\1Element|g;
             s|\(name=".*_call_.*".*\)SchildiChat|\1Element|g;
             s|\(name=".*element_dot_io.*".*\)SchildiChat|\1Element|g;
+            s|\(name=".*screen_notification_settings_sound_element_.*".*\)SchildiChat|\1Element|g;
             s|Element X|SchildiChat Next|g;
             s/SchildiChat\( \|-\)Pro/Element\1Pro/g;
             s/SchildiChatul/Elementul/g;

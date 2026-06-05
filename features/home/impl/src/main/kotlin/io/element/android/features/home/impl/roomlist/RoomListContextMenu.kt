@@ -138,7 +138,6 @@ private fun RoomListModalBottomSheetContent(
                     //iconSource = IconSource.Vector(CompoundIcons.MarkAsRead())
                     iconSource = IconSource.Vector(Icons.Default.RemoveRedEye),
                 ),
-                style = ListItemStyle.Primary,
             )
         } else {
             ListItem(
@@ -153,7 +152,6 @@ private fun RoomListModalBottomSheetContent(
                     //iconSource = IconSource.Vector(CompoundIcons.MarkAsUnread())
                     iconSource = IconSource.Vector(Icons.Default.RemoveRedEye),
                 ),
-                style = ListItemStyle.Primary,
             )
         }
         val (textResId, icon) = if (contextMenu.isFavorite) {
@@ -179,7 +177,6 @@ private fun RoomListModalBottomSheetContent(
             onClick = {
                 onFavoriteChange(!contextMenu.isFavorite)
             },
-            style = ListItemStyle.Primary,
         )
         LowPriorityRoomListContextMenuItem(contextMenu, onLowPriorityChange) // SC
         ListItem(
@@ -195,7 +192,6 @@ private fun RoomListModalBottomSheetContent(
                     CompoundIcons.Settings(),
                 )
             ),
-            style = ListItemStyle.Primary,
         )
         ManageSpacesRoomListContextMenuItems(contextMenu, roomListState, matrixClient)
         if (canReportRoom) {
@@ -233,7 +229,6 @@ private fun RoomListModalBottomSheetContent(
                 leadingContent = ListItemContent.Icon(
                     iconSource = IconSource.Vector(CompoundIcons.Delete())
                 ),
-                style = ListItemStyle.Primary,
             )
         }
     }

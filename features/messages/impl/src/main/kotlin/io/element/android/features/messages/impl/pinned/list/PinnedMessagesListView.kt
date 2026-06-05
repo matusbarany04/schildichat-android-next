@@ -285,7 +285,7 @@ private fun TimelineItemEventContentViewWrapper(
         TimelineItemEventContentView(
             content = event.content,
             debugInfoProvider = event.timelineItemDebugInfoProvider, // SC
-            hideMediaContent = timelineProtectionState.hideMediaContent(event.eventId),
+            hideMediaContent = timelineProtectionState.hideMediaContent(event.eventId, event.isMine),
             onShowContentClick = { timelineProtectionState.eventSink(TimelineProtectionEvent.ShowContent(event.eventId)) },
             onLinkClick = onLinkClick,
             onLinkLongClick = onLinkLongClick,
