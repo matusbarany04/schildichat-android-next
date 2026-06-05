@@ -55,7 +55,7 @@ fun TimelineItemTextView(
         return
     }
     val emojiOnly = //content.formattedBody.toString() == content.body &&
-        containsOnlyEmojisOrEmotes(content.formattedBodySc.text)
+        containsOnlyEmojisOrEmotes(content.formattedBodySc.text, content.formattedBodySc.inlineImages)
     val textStyle = when {
         emojiOnly -> ElementTheme.typography.fontHeadingXlRegular
         else -> ElementTheme.typography.scBubbleFont

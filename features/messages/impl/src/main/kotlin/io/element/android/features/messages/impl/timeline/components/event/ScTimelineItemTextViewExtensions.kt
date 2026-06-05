@@ -33,6 +33,7 @@ import coil3.compose.AsyncImagePainter
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
 import com.beeper.android.messageformat.InlineImageInfo
+import com.beeper.android.messageformat.MatrixBodyAnnotations
 import com.beeper.android.messageformat.MatrixBodyParseResult
 import com.beeper.android.messageformat.MatrixStyledFormattedText
 import com.beeper.android.messageformat.toInlineContent
@@ -44,6 +45,7 @@ import io.element.android.features.messages.impl.timeline.factories.event.matrix
 import io.element.android.features.messages.impl.timeline.factories.event.matrixBodyFormatter
 import io.element.android.features.messages.impl.timeline.model.event.TimelineItemEventContentWithAttachment
 import io.element.android.features.messages.impl.timeline.model.event.TimelineItemTextBasedContent
+import io.element.android.features.messages.impl.utils.containsOnlyEmojis
 import io.element.android.libraries.matrix.api.media.MediaSource
 import io.element.android.libraries.matrix.ui.media.MediaRequestData
 import io.element.android.wysiwyg.link.Link
@@ -92,7 +94,7 @@ fun ScTimelineItemTextView(
     modifier: Modifier = Modifier,
     onContentLayoutChange: (ContentAvoidingLayoutData) -> Unit = {},
 ) {
-    val emojiOnly = containsOnlyEmojisOrEmotes(content.text)
+    val emojiOnly = containsOnlyEmojisOrEmotes(content.text, content.inlineImages)
     val textStyle = when {
         emojiOnly -> ElementTheme.typography.fontHeadingXlRegular
         else -> ElementTheme.typography.scBubbleFont
@@ -213,37 +215,29 @@ private fun InlineImage(
 }
 
 @Composable
-internal fun containsOnlyEmojisOrEmotes(text: AnnotatedString): Boolean {
-    return remember(text) { text.toString().replace(" ", "").containsOnlyEmojis(50) }
+internal fun containsOnlyEmojisOrEmotes(text: AnnotatedString, inlineImages: Map<String, InlineImageInfo>): Boolean {
+    return remember(text) { text.containsOnlyEmojis(inlineImages, 50) }
 }
 
-/* TODO recpect inline images for new renderer
-@Composable
-internal fun containsOnlyEmojisOrEmotes(formattedBody: CharSequence?, body: String): Boolean {
-    // Ignore custom emotes when not rendered
-    val formattedWithInlineImages = formattedBody?.takeIf {
-        !ScPrefs.LEGACY_MESSAGE_RENDERING.value()
-    }
-    return remember(formattedWithInlineImages, body) {
-        val toCheck = if (formattedWithInlineImages is Spanned) {
-            val inlineImageSpans = formattedWithInlineImages.getSpans<InlineImageSpan>()
-            var toCheck = SpannableStringBuilder(formattedWithInlineImages)
-            inlineImageSpans.forEach { span ->
-                // Inline images that are not a custom emote do not count
-                if (!span.isEmoticon) {
-                    return@remember false
-                }
-                val start = toCheck.getSpanStart(span)
-                val end = toCheck.getSpanEnd(span)
-                if (start != -1 && end != -1) {
-                    toCheck = toCheck.replace(start, end, "\uD83D\uDC22")
-                }
-            }
-            toCheck.toString()
-        } else {
-            formattedBody?.toString() ?: body
+fun AnnotatedString.containsOnlyEmojis(
+    inlineImages: Map<String, InlineImageInfo> = emptyMap(),
+    maxEmojis: Int = Integer.MAX_VALUE,
+): Boolean {
+    return if (inlineImages.isNotEmpty()) {
+        if (inlineImages.values.any { !it.isEmote }) {
+            return false
         }
-        toCheck.replace(" ", "").containsOnlyEmojis(50)
+        // If all is custom emotes, those also count as emojis.
+        val customEmotes = getStringAnnotations(MatrixBodyAnnotations.INLINE_IMAGE, 0, length)
+            .sortedByDescending { it.start }
+        var toCheck: CharSequence = this
+        customEmotes.forEach {
+            toCheck = toCheck.removeRange(it.start, it.end)
+        }
+        toCheck.toString().replace(" ", "").containsOnlyEmojisOrIsEmpty(maxEmojis - customEmotes.size)
+    } else {
+        toString().replace(" ", "").containsOnlyEmojis(maxEmojis)
     }
 }
- */
+
+fun String.containsOnlyEmojisOrIsEmpty(maxEmojis: Int = Integer.MAX_VALUE, throwOnError: Boolean = false) = isEmpty() || containsOnlyEmojis(maxEmojis, throwOnError)
