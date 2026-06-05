@@ -162,7 +162,7 @@ class TimelinePresenter(
             when (event) {
                 // SC start
                 is TimelineEvent.OnUnreadLineVisible -> timelineController.scReadState.sawUnreadLine.value = true
-                is TimelineEvent.MarkAsRead -> forceSetReceipts(context, sessionCoroutineScope, room, timelineController.scReadState, isSendPublicReadReceiptsEnabled)
+                is TimelineEvent.MarkAsRead -> forceSetReceipts(context, sessionCoroutineScope, room, timelineController.scReadState, sessionPreferencesStore)
                 // SC end
                 is TimelineEvent.LoadMore -> {
                     if (event.direction == Timeline.PaginationDirection.FORWARDS && timelineMode is Timeline.Mode.Thread) {

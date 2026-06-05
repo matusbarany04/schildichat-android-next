@@ -15,17 +15,26 @@ import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.matrix.api.room.BaseRoom
 import io.element.android.libraries.matrix.api.timeline.ReceiptType
 import io.element.android.libraries.matrix.api.timeline.Timeline
+import io.element.android.libraries.preferences.api.store.SessionPreferencesStore
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-fun forceSetReceipts(context: Context, appScope: CoroutineScope, room: BaseRoom, scReadState: ScReadState, isSendPublicReadReceiptsEnabled: Boolean) {
+fun forceSetReceipts(
+    context: Context,
+    appScope: CoroutineScope,
+    room: BaseRoom,
+    scReadState: ScReadState,
+    sessionPreferencesStore: SessionPreferencesStore,
+) {
     scReadState.sawUnreadLine.value = true
     val eventId = scReadState.readMarkerToSet.value ?: return
     appScope.launch {
         val toast = Toast.makeText(context, chat.schildi.lib.R.string.sc_set_read_marker_implicit_toast_start, Toast.LENGTH_LONG)
         toast.show()
-        room.forceSendSingleReadReceipt(if (isSendPublicReadReceiptsEnabled) ReceiptType.READ else ReceiptType.READ_PRIVATE, eventId)
+        val sendPublicReadReceipts = sessionPreferencesStore.isSendPublicReadReceiptsEnabled().first()
+        room.forceSendSingleReadReceipt(if (sendPublicReadReceipts) ReceiptType.READ else ReceiptType.READ_PRIVATE, eventId)
         room.forceSendSingleReadReceipt(ReceiptType.FULLY_READ, eventId)
         room.setUnreadFlag(false)
         toast.cancel()

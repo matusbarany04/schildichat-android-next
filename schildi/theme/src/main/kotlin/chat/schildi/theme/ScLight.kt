@@ -162,6 +162,7 @@ internal val sclSemanticColors = SemanticColors(
     bgBadgePrimary = scl_bg,
     bgBadgeSecondary = scl_bgFloating,
     separatorPrimary = scl_divider,
+    separatorSecondary = scl_divider,
     // TODO-start
     gradientActionStop1 = LightColorTokens.colorGreen500,
     gradientActionStop2 = LightColorTokens.colorGreen700,

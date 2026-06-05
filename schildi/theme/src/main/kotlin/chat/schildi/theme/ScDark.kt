@@ -162,6 +162,7 @@ internal val scdSemanticColors = SemanticColors(
     bgAccentHovered = scd_accent,
     bgAccentPressed = scd_accent,
     separatorPrimary = scd_divider,
+    separatorSecondary = scd_divider,
     // TODO-start
     gradientActionStop1 = DarkColorTokens.colorGreen1100,
     gradientActionStop2 = DarkColorTokens.colorGreen900,
