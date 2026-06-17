@@ -6,7 +6,7 @@
     <string name="sc_pref_sc_overview_layout_title">SC pārskata izkārtojums</string>
     <string name="sc_pref_sc_timeline_layout_title">SC sarunu izkārtojums</string>
     <string name="sc_pref_sc_floating_date_title">Peldošs datums</string>
-    <string name="sc_pref_pl_display_name_title">Vārdu krāsas pēc spēka līmeņa</string>
+    <string name="sc_pref_pl_display_name_title">Segvārdu krāsa ir atkarīga no lomas</string>
     <string name="sc_onboarding_welcome_title">Laipni lūdzam SchildiChat!</string>
     <string name="sc_action_mark_as_unread">Atzīmēt ka nelasītu</string>
     <string name="sc_pref_screen_experimental_title">Izmēģinājuma</string>
@@ -53,4 +53,12 @@
     <string name="sc_space_all_rooms_title">Visas tērzēšanas</string>
     <string name="sc_upstream_feature_flag_room_list_filters">Istabu saraksta atlases</string>
     <string name="sc_sync_read_receipt_and_marker_summary">Vienmēr iestatīt izlasīšanas atskaiti (ko citi redz un kas aprēķina nelasīto ziņu skaitu) tai pašai ziņai, kurai ir pilnīgas izlasīšanas atzīme (jaunu ziņu līnija, kad skatās tērzēšanā)</string>
+    <string name="sc_action_apply">Pielietot</string>
+    <string name="sc_action_low_priority">Zems svarīgums</string>
+    <string name="sc_pref_el_theme_title">Element izskats</string>
+    <string name="sc_pref_black_theme_title">Melnais izskats</string>
+    <string name="sc_pref_notify_failed_notification_lookup_title">Brīdināt par paziņojumu atteici</string>
+    <string name="sc_pref_bury_low_priority_title">Zems svarīgums apakšā</string>
+    <string name="sc_pref_client_side_sort_title">Klienta puses kārtošana</string>
+    <string name="sc_pref_client_side_sort_title_short">Klienta kārtošana</string>
 </resources>
