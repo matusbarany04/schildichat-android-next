@@ -43,7 +43,6 @@ fun TimelineItemGroupedEventsRow(
     timelineMode: Timeline.Mode,
     timelineRoomInfo: TimelineRoomInfo,
     timelineProtectionState: TimelineProtectionState,
-    renderReadReceipts: Boolean,
     isLastOutgoingMessage: Boolean,
     focusedEventId: EventId?,
     displayThreadSummaries: Boolean,
@@ -90,7 +89,6 @@ fun TimelineItemGroupedEventsRow(
         timelineRoomInfo = timelineRoomInfo,
         timelineProtectionState = timelineProtectionState,
         focusedEventId = focusedEventId,
-        renderReadReceipts = renderReadReceipts,
         isLastOutgoingMessage = isLastOutgoingMessage,
         displayThreadSummaries = displayThreadSummaries,
         onClick = onClick,
@@ -118,7 +116,6 @@ private fun TimelineItemGroupedEventsRowContent(
     timelineRoomInfo: TimelineRoomInfo,
     timelineProtectionState: TimelineProtectionState,
     focusedEventId: EventId?,
-    renderReadReceipts: Boolean,
     isLastOutgoingMessage: Boolean,
     displayThreadSummaries: Boolean,
     onClick: (TimelineItem.Event) -> Unit,
@@ -175,7 +172,6 @@ private fun TimelineItemGroupedEventsRowContent(
                         timelineItem = subGroupEvent,
                         timelineRoomInfo = timelineRoomInfo,
                         timelineProtectionState = timelineProtectionState,
-                        renderReadReceipts = renderReadReceipts,
                         isLastOutgoingMessage = isLastOutgoingMessage,
                         focusedEventId = focusedEventId,
                         displayThreadSummaries = displayThreadSummaries,
@@ -195,14 +191,13 @@ private fun TimelineItemGroupedEventsRowContent(
                     )
                 }
             }
-        } else if (renderReadReceipts) {
+        } else if (timelineItem.aggregatedReadReceipts.isNotEmpty()) {
             TimelineItemReadReceiptView(
                 state = ReadReceiptViewState(
                     sendState = null,
                     isLastOutgoingMessage = false,
                     receipts = timelineItem.aggregatedReadReceipts,
                 ),
-                renderReadReceipts = true,
                 onReadReceiptsClick = onExpandGroupClick
             )
         }
@@ -221,7 +216,6 @@ internal fun TimelineItemGroupedEventsRowContentExpandedPreview() = ElementPrevi
         timelineRoomInfo = aTimelineRoomInfo(),
         timelineProtectionState = aTimelineProtectionState(),
         focusedEventId = events.events.first().eventId,
-        renderReadReceipts = true,
         isLastOutgoingMessage = false,
         displayThreadSummaries = false,
         onClick = {},
@@ -249,7 +243,6 @@ internal fun TimelineItemGroupedEventsRowContentCollapsePreview() = ElementPrevi
         timelineRoomInfo = aTimelineRoomInfo(),
         timelineProtectionState = aTimelineProtectionState(),
         focusedEventId = null,
-        renderReadReceipts = true,
         isLastOutgoingMessage = false,
         displayThreadSummaries = false,
         onClick = {},
